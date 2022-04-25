@@ -51,16 +51,17 @@ class ServiceProvider {
         services: map["services"]);
   }
 
-  factory ServiceProvider.createNew(String email, String displayName) {
+  factory ServiceProvider.createNew(
+      String uid, String email, String displayName) {
     return ServiceProvider(
-      uid: 'unknown',
+      uid: uid,
       displayName: displayName,
       email: email,
       accountCreated: DateTime.now(),
     );
   }
 
-  Map toMap() {
+  Map<String, dynamic> toMap() {
     return {
       "uid": uid,
       "displayName": displayName,

@@ -7,40 +7,41 @@ import 'authenticate.dart';
 class Database {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  Future<String?> addUser(email, displayName) async {
+  Future<Status> addUser(uid, email, displayName) async {
     /// This adds a new user to the database.
-    /// It returns the uid of the user and returns null if
+    /// Call the Authenticate().signup(...) to get the uid.
+    /// It returns the Status.success if user is added and returns Status.unknownError if
     /// something goes wrong.
 
-    User user = User.createNew(email, displayName);
+    User user = User.createNew(uid, email, displayName);
 
     try {
-      return _firestore
-          .collection("Users")
-          .add(user.toMap() as Map<String, dynamic>)
-          .then((value) => value.id);
+      await _firestore.collection("Users").doc(uid).set(user.toMap());
+      return Status.success;
     } catch (e) {
       print(e);
-      return null;
+      return Status.unknownError;
     }
   }
 
-  Future<String?> addServiceProvider(email, displayName) async {
+  Future<Status> addServiceProvider(uid, email, displayName) async {
     /// This adds a new service-provider to the database.
-    /// It returns the uid of the user and returns null if
-    /// something goes wrong.
+    /// Call the Authenticate().signup(...) to get the uid.
+    /// It returns Status.success if service-provider is added and returns
+    /// Status.unknownError if something goes wrong.
 
     ServiceProvider serviceProvider =
-        ServiceProvider.createNew(email, displayName);
+        ServiceProvider.createNew(uid, email, displayName);
 
     try {
-      return _firestore
+      await _firestore
           .collection("ServiceProviders")
-          .add(serviceProvider.toMap() as Map<String, dynamic>)
-          .then((value) => value.id);
+          .doc(uid)
+          .set(serviceProvider.toMap());
+      return Status.success;
     } catch (e) {
       print(e);
-      return null;
+      return Status.unknownError;
     }
   }
 
@@ -64,7 +65,7 @@ class Database {
     /// This only deletes a service-provider from the cloud firestore.
     /// In order to remove its authentication (allow a new account to be created with this email again)
     /// delete its authentication by Authenticate().deleteAccount("email") .
-    /// Returns Status.success if deleted else returns Status.unknown error
+    /// Returns Status.success if deleted else returns Status.unknownError
     /// and prints error to console.
 
     try {
@@ -73,6 +74,47 @@ class Database {
     } catch (e) {
       print(e);
       return Status.unknownError;
+    }
+  }
+
+  Future<Stream<Object>?> getAccountDataStream(uid) async {
+    /// Returns a stream of the account.
+    /// Returns either a User or ServiceProvider STREAM or null if something goes wrong.
+
+    try {
+      var userData = await _firestore.collection("Users").doc(uid).snapshots();
+
+      if (await userData.isEmpty) {
+        var spData =
+            _firestore.collection("ServiceProviders").doc(uid).snapshots();
+        return spData
+            .map((event) => ServiceProvider.fromMap(event.data() as Map));
+      } else {
+        return userData.map((event) => User.fromMap(event.data() as Map));
+      }
+    } catch (e) {
+      print(e);
+      return null;
+    }
+  }
+
+  Future<Object?> getCurrentAccountDataOnce(uid) async {
+    /// Returns the user's data at the time of calling this function.
+    /// Returns either a User or ServiceProvider object or null if something goes wrong.
+
+    try {
+      var docData = await _firestore.collection("Users").doc(uid).get();
+
+      if (docData.exists) {
+        return User.fromMap(docData.data() as Map);
+      } else {
+        docData =
+            await _firestore.collection("ServiceProviders").doc(uid).get();
+        return ServiceProvider.fromMap(docData.data() as Map);
+      }
+    } catch (e) {
+      print(e);
+      return null;
     }
   }
 }

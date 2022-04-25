@@ -19,9 +19,9 @@ class User {
     this.totalRequests,
   });
 
-  factory User.createNew(String displayName, String email) {
+  factory User.createNew(String uid, String email, String displayName) {
     return User(
-        uid: "unknown",
+        uid: uid,
         displayName: displayName,
         accountCreated: DateTime.now(),
         email: email);
@@ -53,7 +53,7 @@ class User {
     );
   }
 
-  Map toMap() {
+  Map<String, dynamic> toMap() {
     return {
       "uid": uid,
       "displayName": displayName,
