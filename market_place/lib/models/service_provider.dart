@@ -1,14 +1,16 @@
 class ServiceProvider {
   String uid;
   String displayName;
-  List<String>? services = [];
+  List? services = [];
   int? ordersCompleted = 0;
   double? averageRating = 0;
   int? ratings = 0;
-  List<String>? reviews = [];
+  List? reviews = [];
   String? description = '';
   DateTime accountCreated;
   String email;
+
+  static const String type = "service-provider";
 
   ServiceProvider(
       {required this.uid,
@@ -58,6 +60,12 @@ class ServiceProvider {
       displayName: displayName,
       email: email,
       accountCreated: DateTime.now(),
+      averageRating: 0,
+      description: '',
+      ordersCompleted: 0,
+      ratings: 0,
+      reviews: [],
+      services: [],
     );
   }
 

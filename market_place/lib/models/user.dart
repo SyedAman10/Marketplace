@@ -3,10 +3,12 @@ class User {
   String email;
   String uid;
   DateTime accountCreated;
-  List<String>? activeRequests = [];
-  List<String>? completedRequests = [];
+  List? activeRequests = [];
+  List? completedRequests = [];
   int? totalRequests = 0;
   int? ordersPlaced = 0;
+
+  static const String type = "user";
 
   User({
     required this.uid,
@@ -21,10 +23,15 @@ class User {
 
   factory User.createNew(String uid, String email, String displayName) {
     return User(
-        uid: uid,
-        displayName: displayName,
-        accountCreated: DateTime.now(),
-        email: email);
+      uid: uid,
+      displayName: displayName,
+      accountCreated: DateTime.now(),
+      email: email,
+      activeRequests: [],
+      completedRequests: [],
+      ordersPlaced: 0,
+      totalRequests: 0,
+    );
   }
 
   factory User.fromMap(Map map) {

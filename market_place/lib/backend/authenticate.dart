@@ -50,7 +50,7 @@ class Authenticate {
   Future<Status> deleteAccount() async {
     /// This tries to ONLY delete the currently logged in account.
     /// It does not delete it from the cloud firestore which can be done by
-    /// Database().deleteUser(...) or Database().deleteServiceProvider(...).
+    /// Database().deleteAccount("uid").
     ///
     /// It return Status.success if the account gets deleted and
     /// returns Status.unknownError if something goes wrong and
@@ -101,5 +101,22 @@ class Authenticate {
       print(e);
       return Status.unknownError;
     }
+  }
+
+  Future<Status> logout() async {
+    /// Returns Status.success if the account got logged out
+    /// else returns Status.unknownError
+
+    try {
+      await _auth.signOut();
+      return Status.success;
+    } catch (e) {
+      print(e);
+      return Status.unknownError;
+    }
+  }
+
+  String get getCurrentUserUid {
+    return _auth.currentUser!.uid;
   }
 }
