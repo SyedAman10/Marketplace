@@ -62,11 +62,11 @@ class Database {
 
     try {
       var data = await _firestore.collection("AllAccounts").doc(uid).get();
-      if (data.get("type") == User) {
+      if (data.get("type") == User.type) {
         await _firestore.collection("Users").doc(uid).delete();
         await _firestore.collection("AllAccounts").doc(uid).delete();
         return Status.success;
-      } else if (data.get("type") == ServiceProvider) {
+      } else if (data.get("type") == ServiceProvider.type) {
         await _firestore.collection("ServiceProviders").doc(uid).delete();
         await _firestore.collection("AllAccounts").doc(uid).delete();
         return Status.success;
