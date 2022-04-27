@@ -47,8 +47,8 @@ class _SignupPageState extends State<SignupPage> {
               onPressed: () async {
                 var uid = await Authenticate()
                     .signup(_emailController.text, _passwordController.text);
-                if (_typeController.text.toLowerCase() == "user") {
-                  await Database().addUser(
+                if (_typeController.text.toLowerCase() == "client") {
+                  await Database().addClient(
                       uid, _emailController.text, _nameController.text);
                 } else {
                   await Database().addServiceProvider(

@@ -1,4 +1,4 @@
-class User {
+class Client {
   String displayName;
   String email;
   String uid;
@@ -8,9 +8,9 @@ class User {
   int? totalRequests = 0;
   int? ordersPlaced = 0;
 
-  static const String type = "user";
+  static const String type = "client";
 
-  User({
+  Client({
     required this.uid,
     required this.displayName,
     required this.accountCreated,
@@ -21,8 +21,8 @@ class User {
     this.totalRequests,
   });
 
-  factory User.createNew(String uid, String email, String displayName) {
-    return User(
+  factory Client.createNew(String uid, String email, String displayName) {
+    return Client(
       uid: uid,
       displayName: displayName,
       accountCreated: DateTime.now(),
@@ -34,7 +34,7 @@ class User {
     );
   }
 
-  factory User.fromMap(Map map) {
+  factory Client.fromMap(Map map) {
     Map nullMap = {
       "activeRequests": [],
       "completedRequests": [],
@@ -48,7 +48,7 @@ class User {
       },
     );
 
-    return User(
+    return Client(
       accountCreated: DateTime.parse(map["accountCreated"]),
       displayName: map["displayName"],
       email: map["email"],

@@ -56,9 +56,9 @@ class _ProfilePageState extends State<ProfilePage> {
                   return Text("Data is null");
                 } else {
                   try {
-                    User user = data as User;
+                    Client client = data as Client;
                     List<Widget> children = [];
-                    user.toMap().forEach(
+                    client.toMap().forEach(
                       (key, value) {
                         children.add(Text("${key} : ${value}"));
                       },
